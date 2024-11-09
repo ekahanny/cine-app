@@ -1,6 +1,6 @@
-import { Footer } from "./assets/components/elements/Footer";
-import { Hero } from "./assets/components/elements/Hero";
-import { NavBar } from "./assets/components/elements/NavBar";
+import { NavBar } from "../src/components/layouts/NavBar";
+import { Hero } from "../src/components/elements/Hero";
+import { Footer } from "../src/components/layouts/Footer";
 
 function App() {
   return (

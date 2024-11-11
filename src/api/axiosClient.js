@@ -1,28 +1,27 @@
 import axios from "axios";
-import apiConfig from "./apiConfig";
+
+const API_KEY = import.meta.env.VITE_APIKEY;
+const BASE_URL = "https://api.themoviedb.org/3/";
+
 const axiosClient = axios.create({
-  baseURL: apiConfig.baseUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  paramsSerializer: (params) => {
-    const searchParams = new URLSearchParams({
-      ...params,
-      api_key: apiConfig.apiKey,
-    });
-    return searchParams.toString();
+  baseURL: BASE_URL,
+  params: {
+    api_key: API_KEY,
   },
 });
-axiosClient.interceptors.request.use(async (config) => config);
+
+// mengambil URL gambar berdasarkan ukuran
+axiosClient.getImageUrl = {
+  originalImage: (imgPath) => `https://image.tmdb.org/t/p/original/${imgPath}`,
+  w500Image: (imgPath) => `https://image.tmdb.org/t/p/w500/${imgPath}`,
+};
+
 axiosClient.interceptors.response.use(
-  (res) => {
-    if (res && res.data) {
-      return res.data;
-    }
-    return res;
-  },
+  (response) => response.data,
   (error) => {
-    throw error;
+    console.error("Error:", error);
+    return Promise.reject(error);
   }
 );
+
 export default axiosClient;

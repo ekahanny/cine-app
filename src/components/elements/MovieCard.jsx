@@ -24,11 +24,11 @@ export const MovieCard = (props) => {
   }, []);
 
   return (
-    <div className=" grid grid-rows-4 grid-cols-2 gap-2 mt-4 ml-5">
+    <div className="grid grid-rows-4 grid-cols-2 lg:grid-cols-5 gap-2 mt-6 lg:mt-8 ml-5 lg:ml-8 mb-3 lg:mb-4">
       {movies.length > 0 ? (
         movies.map((movie) => (
           <div key={movie.id} className="card relative">
-            <p className="flex flex-row items-center absolute text-white m-2 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100">
+            <p className="flex flex-row items-center absolute text-white m-2 lg:ml-4 lg:mt-6 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100">
               <svg
                 width="18"
                 height="20"
@@ -48,7 +48,7 @@ export const MovieCard = (props) => {
             </p>
 
             <img
-              className="w-40 rounded-lg transform transition-transform duration-300 hover:scale-105"
+              className="w-40 lg:w-64 lg:mt-3 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
               src={
                 movie.poster_path
                   ? axiosClient.getImageUrl.originalImage(movie.poster_path)
@@ -56,11 +56,17 @@ export const MovieCard = (props) => {
               }
               alt={movie.title}
             />
-            <h1 className="text-white mt-2 font-semibold text-lg">
-              {" "}
-              {movie.title.length > 14
-                ? `${movie.title.slice(0, 14)}...`
-                : movie.title}
+            <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
+              <span className="block lg:hidden">
+                {movie.title.length > 14
+                  ? `${movie.title.slice(0, 14)}...`
+                  : movie.title}
+              </span>
+              <span className="hidden lg:block">
+                {movie.title.length > 24
+                  ? `${movie.title.slice(0, 24)}...`
+                  : movie.title}
+              </span>
             </h1>
             <p className="text-white text-lg mb-4">
               ({movie.release_date.substring(0, 4)})

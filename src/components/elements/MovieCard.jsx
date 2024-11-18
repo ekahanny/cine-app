@@ -1,33 +1,16 @@
-import React, { useEffect, useState } from "react";
-import tmdbApi, { movieType } from "../../api/tmdbApi";
+import React from "react";
 import axiosClient from "../../api/axiosClient";
 
-export const MovieCard = (props) => {
-  const [movies, setMovies] = useState([]);
-
-  // Fetch API
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await tmdbApi.getMovies(movieType.popular, {
-          language: "en-US",
-          page: 1,
-        });
-        setMovies(response.results);
-        console.log(response.results);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    };
-
-    fetchMovies();
-  }, []);
-
+export const MovieCard = ({
+  items,
+  titleKey = "title",
+  release_date = "release_date",
+}) => {
   return (
-    <div className="grid grid-rows-4 grid-cols-2 lg:grid-cols-5 gap-2 mt-6 lg:mt-8 ml-5 lg:ml-8 mb-3 lg:mb-4">
-      {movies.length > 0 ? (
-        movies.map((movie) => (
-          <div key={movie.id} className="card relative">
+    <div className="grid grid-rows-4 grid-cols-2 lg:grid-cols-5 gap-2 mt-6 lg:mt-7 ml-5 lg:ml-8 mb-3 lg:mb-4">
+      {items.length > 0 ? (
+        items.map((item) => (
+          <div key={item.id} className="card relative">
             <p className="flex flex-row items-center absolute text-white m-2 lg:ml-4 lg:mt-6 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100">
               <svg
                 width="18"
@@ -44,37 +27,37 @@ export const MovieCard = (props) => {
                   stroke-width="2"
                 />
               </svg>
-              {movie.vote_average.toFixed(1)}
+              {item.vote_average.toFixed(1)}
             </p>
 
             <img
               className="w-40 lg:w-64 lg:mt-3 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
               src={
-                movie.poster_path
-                  ? axiosClient.getImageUrl.originalImage(movie.poster_path)
+                item.poster_path
+                  ? axiosClient.getImageUrl.originalImage(item.poster_path)
                   : ""
               }
-              alt={movie.title}
+              alt={item[titleKey]}
             />
             <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
               <span className="block lg:hidden">
-                {movie.title.length > 14
-                  ? `${movie.title.slice(0, 14)}...`
-                  : movie.title}
+                {item[titleKey].length > 14
+                  ? `${item[titleKey].slice(0, 14)}...`
+                  : item[titleKey]}
               </span>
               <span className="hidden lg:block">
-                {movie.title.length > 24
-                  ? `${movie.title.slice(0, 24)}...`
-                  : movie.title}
+                {item[titleKey].length > 24
+                  ? `${item[titleKey].slice(0, 24)}...`
+                  : item[titleKey]}
               </span>
             </h1>
             <p className="text-white text-lg mb-4">
-              ({movie.release_date.substring(0, 4)})
+              ({item[release_date].substring(0, 4)})
             </p>
           </div>
         ))
       ) : (
-        <p>No movies available.</p>
+        <p>No items available.</p>
       )}
     </div>
   );

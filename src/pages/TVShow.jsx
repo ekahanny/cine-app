@@ -56,6 +56,7 @@ export function TVShow() {
           </label>
           <MovieCard
             items={tvShows}
+            category="tv"
             titleKey="name"
             release_date="first_air_date"
           />

@@ -21,7 +21,7 @@ export function Movie() {
         await new Promise((resolve) => setTimeout(resolve, 3000));
         setMovies(response.results);
       } catch (error) {
-        console.error("Error fetching movies:", error);
+        console.error("Error fetching movies: ", error);
       } finally {
         setLoading(false);
       }
@@ -57,6 +57,7 @@ export function Movie() {
           </label>
           <MovieCard
             items={movies}
+            category="movie"
             titleKey="title"
             release_date="release_date"
           />

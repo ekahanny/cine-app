@@ -12,7 +12,7 @@ export const MovieCard = ({
     <div className="grid grid-rows-4 grid-cols-2 lg:grid-cols-5 gap-2 mt-6 lg:mt-7 ml-5 lg:ml-8 mb-3 lg:mb-4">
       {items.length > 0 ? (
         items.map((item) => (
-          <Link to={`/detail/${category}/${item.id}`} key={item.id}>
+          <Link to={`/${category}/${item.id}`} key={item.id}>
             <div key={item.id} className="card relative">
               <p className="flex flex-row items-center absolute text-white m-2 lg:ml-4 lg:mt-6 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100">
                 <svg

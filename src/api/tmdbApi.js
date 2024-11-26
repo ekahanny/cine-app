@@ -38,6 +38,21 @@ const tmdbApi = {
     const url = `${category}/${id}`;
     return axiosClient.get(url, { params });
   },
+
+  getCredits: (category, id, params = {}) => {
+    const url = `${category}/${id}/credits`;
+    return axiosClient.get(url, { params });
+  },
+
+  getVideos: (category, id, params = {}) => {
+    const url = `${category}/${id}/videos`;
+    return axiosClient.get(url, { params });
+  },
+
+  getImgPreview: (category, id, params = {}) => {
+    const url = `${category}/${id}/images`;
+    return axiosClient.get(url, { params });
+  },
 };
 
 export default tmdbApi;

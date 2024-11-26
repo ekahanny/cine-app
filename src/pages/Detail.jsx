@@ -8,15 +8,39 @@ import axiosClient from "../api/axiosClient";
 export function Detail() {
   const { category, id } = useParams();
   const [details, setDetails] = useState(null);
+  const [videos, setVideos] = useState([]);
+  const [imgPreview, setImgPreview] = useState([]);
+  const [casts, setCasts] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
+        // Fetch Details
         const response = await tmdbApi.getDetails(category, id, {
           language: "en-US",
         });
         setDetails(response);
-        console.log(response);
+
+        // Fetch Casts
+        const castsResponse = await tmdbApi.getCredits(category, id, {
+          language: "en-US",
+        });
+        setCasts(castsResponse);
+        console.log(castsResponse.cast);
+
+        // Fetch Videos
+        const videoResponse = await tmdbApi.getVideos(category, id, {
+          language: "en-US",
+        });
+        setVideos(videoResponse.results);
+        console.log("video response: ", videoResponse.results);
+
+        // Fetch Image Preview
+        const previewResponse = await tmdbApi.getImgPreview(category, id, {
+          language: "en-US",
+        });
+        setImgPreview(previewResponse);
+        console.log("Image preview: ", previewResponse);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -76,13 +100,18 @@ export function Detail() {
                 {details.vote_average.toFixed(1)}
               </div>
 
-              {/* Genres */}
+              {/* Genre */}
               {details.genres.slice(0, 2).map((genre) => (
                 <div className="flex flex-row border my-4 mt-6 border-white bg-[#09093d] p-2 text-sm font-semibold rounded-lg">
                   <p className="text-white items-center">{genre.name}</p>
                 </div>
               ))}
             </div>
+
+            {/* Deskripsi Singkat */}
+            <p className="text-white text-xs font-semibold text-center mt-2 px-6 leading-5">
+              {details.overview}
+            </p>
           </div>
         </div>
       ) : (

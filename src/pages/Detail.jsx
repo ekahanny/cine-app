@@ -9,7 +9,7 @@ export function Detail() {
   const { category, id } = useParams();
   const [details, setDetails] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [imgPreview, setImgPreview] = useState([]);
+  const [imgPreview, setImgPreview] = useState(null);
   const [casts, setCasts] = useState([]);
 
   useEffect(() => {
@@ -38,6 +38,7 @@ export function Detail() {
         // Fetch Image Preview
         const previewResponse = await tmdbApi.getImgPreview(category, id, {
           language: "en-US",
+          include_image_language: "en,null",
         });
         setImgPreview(previewResponse);
         console.log("Image preview: ", previewResponse);
@@ -112,6 +113,38 @@ export function Detail() {
             <p className="text-white text-xs font-semibold text-center mt-2 px-6 leading-5">
               {details.overview}
             </p>
+
+            {/* Carousel */}
+            <div>
+              <div className="divider divider-primary text-white mt-10 font-semibold text-xl">
+                Casts
+              </div>
+              <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-8">
+                {casts?.cast?.slice(0, 10).map((cast) => (
+                  <div key={cast.id} className="carousel-item relative">
+                    {/* Gambar Cast */}
+                    <img
+                      src={
+                        cast.profile_path
+                          ? axiosClient.getImageUrl.w500Image(cast.profile_path)
+                          : "https://via.placeholder.com/500x750?text=No+Image"
+                      }
+                      className="rounded-box object-cover w-full h-full"
+                      alt={cast.name}
+                    />
+                    {/* Overlay Hitam */}
+                    <div className="absolute inset-0  flex items-end justify-center">
+                      <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
+                        {cast.name} <br />
+                        <span className="text-sm italic">
+                          as {cast.character}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (

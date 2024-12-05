@@ -151,7 +151,7 @@ export function NavBar() {
               </li>
               <li>
                 <NavLink
-                  to="/tv-show"
+                  to="/tv"
                   className={({ isActive }) =>
                     `block py-2 px-3 rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${
                       isActive ? "text-blue-600" : "text-white"

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { NavBar } from "../components/layouts/NavBar";
 import { Footer } from "../components/layouts/Footer";
 import axiosClient from "../api/axiosClient";
+import { Carousel } from "../components/elements/Carousel";
 
 export function Detail() {
   const { category, id } = useParams();
@@ -110,7 +111,7 @@ export function Detail() {
             </div>
 
             {/* Deskripsi Singkat */}
-            <p className="text-white text-xs font-semibold text-center mt-2 px-6 leading-5">
+            <p className="text-white text-sm font-semibold text-center mt-2 px-6 leading-5">
               {details.overview}
             </p>
 
@@ -119,7 +120,7 @@ export function Detail() {
               <div className="divider divider-primary text-white mt-10 font-semibold text-xl">
                 Casts
               </div>
-              <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-8">
+              <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2">
                 {casts?.cast?.slice(0, 10).map((cast) => (
                   <div key={cast.id} className="carousel-item relative">
                     {/* Gambar Cast */}
@@ -144,6 +145,17 @@ export function Detail() {
                   </div>
                 ))}
               </div>
+
+              {/* Movie Poster */}
+              <div>
+                <div className="divider divider-primary text-white mt-12 font-semibold text-xl">
+                  Movie Posters
+                </div>
+                {/* Carousel Movie Poster */}
+                <Carousel />
+              </div>
+
+              {/*  */}
             </div>
           </div>
         </div>

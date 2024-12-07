@@ -1,62 +1,51 @@
+import { useState } from "react";
+import axiosClient from "../../api/axiosClient";
+
 export function Carousel({ items }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const handlePrev = () => {
+    // Kalau dia di slide pertama, dia akan kembali ke slide terakhir
+    setActiveSlide((prev) => (prev === 0 ? items.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    // Kalau dia di slide terakhir, dia akan kembali ke slide pertama
+    setActiveSlide((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+  };
+
+  if (!items || items.length === 0) {
+    return <p className="text-white text-center">No items available.</p>;
+  }
+
   return (
     <div className="carousel w-full">
-      <div id="slide1" className="carousel-item relative w-full">
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
-          className="w-full"
-        />
-        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-          <a href="#slide4" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide2" className="btn btn-circle">
-            ❯
-          </a>
+      {items.map((item, index) => (
+        <div
+          key={index}
+          className={`carousel-item relative w-full ${
+            index === activeSlide ? "block" : "hidden"
+          }`}
+        >
+          <img
+            src={
+              item.file_path
+                ? axiosClient.getImageUrl.originalImage(item.file_path)
+                : ""
+            }
+            alt={`Slide ${index + 1}`}
+            className="w-full mt-3"
+          />
+          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+            <button onClick={handlePrev} className="btn btn-circle">
+              ❮
+            </button>
+            <button onClick={handleNext} className="btn btn-circle">
+              ❯
+            </button>
+          </div>
         </div>
-      </div>
-      <div id="slide2" className="carousel-item relative w-full">
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
-          className="w-full"
-        />
-        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-          <a href="#slide1" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide3" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
-      </div>
-      <div id="slide3" className="carousel-item relative w-full">
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
-          className="w-full"
-        />
-        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-          <a href="#slide2" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide4" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
-      </div>
-      <div id="slide4" className="carousel-item relative w-full">
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
-          className="w-full"
-        />
-        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-          <a href="#slide3" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide1" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }

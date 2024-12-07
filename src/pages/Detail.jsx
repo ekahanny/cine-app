@@ -33,7 +33,7 @@ export function Detail() {
         const videoResponse = await tmdbApi.getVideos(category, id, {
           language: "en-US",
         });
-        setVideos(videoResponse.results);
+        setVideos(videoResponse.results.slice(0, 8));
         console.log("video response: ", videoResponse.results);
 
         // Fetch Image Preview
@@ -130,6 +130,7 @@ export function Detail() {
                       className="rounded-box object-cover w-full h-full"
                       alt={cast.name}
                     />
+
                     {/* Overlay Hitam */}
                     <div className="absolute inset-0  flex items-end justify-center">
                       <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
@@ -147,10 +148,14 @@ export function Detail() {
               <div>
                 <Divider name="Movie Posters" />
                 {/* Carousel Movie Poster */}
-                <Carousel items={imgPreview} />
+                <Carousel items={imgPreview} name="image" />
               </div>
 
-              {/*  */}
+              {/* Video Carousel */}
+              <div>
+                <Divider name="Videos" />
+                <Carousel items={videos} name="video" />
+              </div>
             </div>
           </div>
         </div>

@@ -16,6 +16,10 @@ axiosClient.getImageUrl = {
   w500Image: (imgPath) => `https://image.tmdb.org/t/p/w500/${imgPath}`,
 };
 
+axiosClient.getVideo = {
+  youtubeVid: (keyVideo) => `https://www.youtube.com/embed/${keyVideo}`,
+};
+
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {

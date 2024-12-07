@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosClient from "../../api/axiosClient";
 
-export function Carousel({ items }) {
+export function Carousel({ items, name }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const handlePrev = () => {
@@ -27,15 +27,30 @@ export function Carousel({ items }) {
             index === activeSlide ? "block" : "hidden"
           }`}
         >
-          <img
-            src={
-              item.file_path
-                ? axiosClient.getImageUrl.originalImage(item.file_path)
-                : ""
-            }
-            alt={`Slide ${index + 1}`}
-            className="w-full mt-3"
-          />
+          {name === "image" ? (
+            <img
+              src={
+                item.file_path
+                  ? axiosClient.getImageUrl.originalImage(item.file_path)
+                  : ""
+              }
+              alt={`Slide ${index + 1}`}
+              className="w-full mt-3"
+            />
+          ) : name === "video" ? (
+            <iframe
+              width="560"
+              height="315"
+              src={item.key ? axiosClient.getVideo.youtubeVid(item.key) : ""}
+              title={`YouTube video ${index + 1}`}
+              // frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full mt-3"
+            ></iframe>
+          ) : (
+            <p className="text-white text-center">Unsupported content type.</p>
+          )}
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <button onClick={handlePrev} className="btn btn-circle">
               ❮

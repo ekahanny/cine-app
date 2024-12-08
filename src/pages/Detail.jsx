@@ -7,6 +7,7 @@ import axiosClient from "../api/axiosClient";
 import { Carousel } from "../components/elements/Carousel";
 import { Divider } from "../components/elements/Divider";
 import Avatar from "../assets/images/user.png";
+import MovieCard from "../components/elements/MovieCard";
 
 export function Detail() {
   const { category, id } = useParams();
@@ -16,6 +17,7 @@ export function Detail() {
   const [casts, setCasts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [displayedLength, setDisplayedLength] = useState([]); // Panjang awal karakter
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -51,7 +53,19 @@ export function Detail() {
         });
         setReviews(reviewRes.results);
 
+        // For the 'Read More...'
         setDisplayedLength(reviewRes.results.map(() => 300));
+
+        // Fetch Recommendations
+        const RecommendationsRes = await tmdbApi.getRecommendations(
+          category,
+          id,
+          {
+            language: "en-US",
+          }
+        );
+        setRecommendations(RecommendationsRes.results.slice(0, 2));
+        console.log(RecommendationsRes.results);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -243,6 +257,15 @@ export function Detail() {
                   </p>
                 )}
               </div>
+
+              {/* Recommendations */}
+              <Divider name="You Might Also Like" />
+              <MovieCard
+                items={recommendations}
+                category="movie"
+                titleKey="title"
+                type="recommendations"
+              />
             </div>
           </div>
         </div>

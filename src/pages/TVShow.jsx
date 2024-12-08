@@ -58,6 +58,7 @@ export function TVShow() {
             items={tvShows}
             category="tv"
             titleKey="name"
+            type="general"
             release_date="first_air_date"
           />
         </>

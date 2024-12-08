@@ -53,6 +53,11 @@ const tmdbApi = {
     const url = `${category}/${id}/images`;
     return axiosClient.get(url, { params });
   },
+
+  getReviews: (category, id, params = {}) => {
+    const url = `${category}/${id}/reviews`;
+    return axiosClient.get(url, { params });
+  },
 };
 
 export default tmdbApi;

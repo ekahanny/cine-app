@@ -6,6 +6,7 @@ import { Footer } from "../components/layouts/Footer";
 import axiosClient from "../api/axiosClient";
 import { Carousel } from "../components/elements/Carousel";
 import { Divider } from "../components/elements/Divider";
+import Avatar from "../assets/images/user.png";
 
 export function Detail() {
   const { category, id } = useParams();
@@ -13,6 +14,8 @@ export function Detail() {
   const [videos, setVideos] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
   const [casts, setCasts] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [displayedLength, setDisplayedLength] = useState([]); // Panjang awal karakter
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -34,7 +37,6 @@ export function Detail() {
           language: "en-US",
         });
         setVideos(videoResponse.results.slice(0, 8));
-        console.log("video response: ", videoResponse.results);
 
         // Fetch Image Preview
         const previewResponse = await tmdbApi.getImgPreview(category, id, {
@@ -42,12 +44,28 @@ export function Detail() {
           include_image_language: "en,null",
         });
         setImgPreview(previewResponse.backdrops.slice(0, 10));
+
+        // Fetch Reviews
+        const reviewRes = await tmdbApi.getReviews(category, id, {
+          language: "en-US",
+        });
+        setReviews(reviewRes.results);
+
+        setDisplayedLength(reviewRes.results.map(() => 300));
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     fetchDetails();
   }, [category, id]);
+
+  const handleReadMore = (index) => {
+    setDisplayedLength((prev) => {
+      const newLengths = [...prev];
+      newLengths[index] += 300;
+      return newLengths;
+    });
+  };
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
@@ -155,6 +173,75 @@ export function Detail() {
               <div>
                 <Divider name="Videos" />
                 <Carousel items={videos} name="video" />
+              </div>
+
+              {/* Reviews */}
+              <div>
+                <Divider name="Reviews & Comments" />
+                {reviews.length > 0 ? (
+                  reviews.map((review, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="bg-indigo-900 text-white border border-white rounded-md m-4"
+                      >
+                        {/* Profile Picture, Name, and Date */}
+                        <div className="flex flex-row ml-4 mt-4">
+                          <img
+                            src={
+                              review.author_details.avatar_path
+                                ? axiosClient.getImageUrl.originalImage(
+                                    review.author_details.avatar_path
+                                  )
+                                : Avatar
+                            }
+                            className={`w-12 h-12 mt-1 ${
+                              review.author_details.avatar_path
+                                ? "rounded-full w-13 h-13"
+                                : ""
+                            }`}
+                            alt=""
+                          />
+                          <div className="ml-3">
+                            <p className="font-semibold text-xl">
+                              {review.author_details.username}
+                            </p>
+                            <div className="flex flex-row">
+                              <p>{review.updated_at.slice(0, 10)} </p>
+                              <p
+                                className={`ml-1 ${
+                                  review.created_at === review.updated_at
+                                    ? "hidden"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                • Edited
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Content of Reviews */}
+                        <p className="py-3 px-4">
+                          {review.content.slice(0, displayedLength[index])}
+                          {displayedLength[index] < review.content.length && (
+                            <span
+                              className="text-blue-500 cursor-pointer"
+                              onClick={() => handleReadMore(index)}
+                            >
+                              {" "}
+                              ...Read More
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-white font-semibold text-2xl px-6 py-5 italic">
+                    No Reviews Yet..
+                  </p>
+                )}
               </div>
             </div>
           </div>

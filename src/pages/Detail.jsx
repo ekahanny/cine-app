@@ -18,14 +18,17 @@ export function Detail() {
   const [reviews, setReviews] = useState([]);
   const [displayedLength, setDisplayedLength] = useState([]); // Panjang awal karakter
   const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
+      setLoading(true);
       try {
         // Fetch Details
         const response = await tmdbApi.getDetails(category, id, {
           language: "en-US",
         });
+        await new Promise((resolve) => setTimeout(resolve, 4000));
         setDetails(response);
 
         // Fetch Casts
@@ -68,6 +71,8 @@ export function Detail() {
         console.log(RecommendationsRes.results);
       } catch (error) {
         console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchDetails();
@@ -83,7 +88,11 @@ export function Detail() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
-      {details ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-bars loading-lg text-info"></span>
+        </div>
+      ) : details ? (
         <div className="relative flex-1 h-screen">
           {/* Backdrop path */}
           <div

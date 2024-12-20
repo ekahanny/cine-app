@@ -93,10 +93,10 @@ export function Detail() {
           <span className="loading loading-bars loading-lg text-info"></span>
         </div>
       ) : details ? (
-        <div className="relative flex-1 h-screen">
+        <div className="relative flex-1 h-screen lg:h-80">
           {/* Backdrop path */}
           <div
-            className="absolute inset-0 top-0 bg-center bg-no-repeat bg-contain lg:bg-cover"
+            className="absolute inset-0 bg-center bg-no-repeat bg-contain"
             style={{
               backgroundImage: `url(${axiosClient.getImageUrl.originalImage(
                 details.backdrop_path
@@ -104,16 +104,16 @@ export function Detail() {
               backgroundPosition: "top",
               filter: "brightness(60%)",
             }}
-          ></div>
-
-          {/* Overlay gelap */}
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          >
+            {/* Overlay gelap */}
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
+          </div>
 
           {/* Konten */}
           <div className="relative z-10 py-10 flex flex-col justify-center items-center h-full">
             {/* Poster */}
             <img
-              className="w-60"
+              className="w-60 lg:w-64"
               src={
                 details.poster_path
                   ? axiosClient.getImageUrl.originalImage(details.poster_path)
@@ -151,14 +151,14 @@ export function Detail() {
             </div>
 
             {/* Deskripsi Singkat */}
-            <p className="text-white text-sm font-semibold text-center mt-2 px-6 leading-5">
+            <p className="text-white text-sm font-semibold text-center mt-2 px-6 leading-5 lg:px-60">
               {details.overview}
             </p>
 
             {/* Carousel Casts */}
-            <div>
+            <div className="mt-3">
               <Divider name="Casts" />
-              <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2">
+              <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
                 {casts?.cast?.slice(0, 10).map((cast) => (
                   <div key={cast.id} className="carousel-item relative">
                     {/* Gambar Cast */}
@@ -186,30 +186,36 @@ export function Detail() {
               </div>
 
               {/* Movie Poster */}
-              <div>
+              <div className="mt-4">
                 <Divider name="Movie Posters" />
                 {/* Carousel Movie Poster */}
-                <Carousel items={imgPreview} name="image" />
+                <div className="lg:px-10 lg:py-2">
+                  <Carousel items={imgPreview} name="image" />
+                </div>
               </div>
 
               {/* Video Carousel */}
-              <div>
+              <div className="mt-5">
                 <Divider name="Videos" />
-                <Carousel items={videos} name="video" />
+                <div className="lg:px-6">
+                  <Carousel items={videos} name="video" />
+                </div>
               </div>
 
               {/* Reviews */}
               <div>
-                <Divider name="Reviews & Comments" />
+                <div className="mb-10">
+                  <Divider name="Reviews & Comments" />
+                </div>
                 {reviews.length > 0 ? (
                   reviews.map((review, index) => {
                     return (
                       <div
                         key={index}
-                        className="bg-indigo-900 text-white border border-white rounded-md m-4"
+                        className="bg-indigo-900 text-white border border-white rounded-md m-4 lg:mx-24 lg:mt-6"
                       >
                         {/* Profile Picture, Name, and Date */}
-                        <div className="flex flex-row ml-4 mt-4">
+                        <div className="flex flex-row ml-4 mt-4 lg:ml-8">
                           <img
                             src={
                               review.author_details.avatar_path
@@ -245,17 +251,25 @@ export function Detail() {
                           </div>
                         </div>
                         {/* Content of Reviews */}
-                        <p className="py-3 px-4">
-                          {review.content.slice(0, displayedLength[index])}
-                          {displayedLength[index] < review.content.length && (
-                            <span
-                              className="text-blue-500 cursor-pointer"
-                              onClick={() => handleReadMore(index)}
-                            >
-                              {" "}
-                              ...Read More
-                            </span>
-                          )}
+                        <p className="py-3 px-4 lg:px-8 mb-3">
+                          {/* Teks penuh untuk layar besar */}
+                          <span className="hidden lg:block">
+                            {review.content}
+                          </span>
+
+                          {/* Teks terbatas + "Read More" untuk layar kecil */}
+                          <span className="block lg:hidden">
+                            {review.content.slice(0, displayedLength[index])}
+                            {displayedLength[index] < review.content.length && (
+                              <span
+                                className="text-blue-500 cursor-pointer"
+                                onClick={() => handleReadMore(index)}
+                              >
+                                {" "}
+                                ...Read More
+                              </span>
+                            )}
+                          </span>
                         </p>
                       </div>
                     );
@@ -268,7 +282,9 @@ export function Detail() {
               </div>
 
               {/* Recommendations */}
-              <Divider name="You Might Also Like" />
+              <div className="my-10">
+                <Divider name="You Might Also Like" />
+              </div>
               <MovieCard
                 items={recommendations}
                 category="movie"

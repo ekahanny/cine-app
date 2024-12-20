@@ -39,13 +39,11 @@ export function Carousel({ items, name }) {
             />
           ) : name === "video" ? (
             <iframe
-              width="560"
-              height="315"
               src={item.key ? axiosClient.getVideo.youtubeVid(item.key) : ""}
               title={`YouTube video ${index + 1}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              className="w-full mt-1 p-3"
+              className="w-full h-[300px] lg:h-[700px] mt-2 p-3 lg:px-5"
             ></iframe>
           ) : (
             <p className="text-white text-center">Unsupported content type.</p>

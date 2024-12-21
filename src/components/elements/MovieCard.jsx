@@ -6,17 +6,10 @@ export const MovieCard = ({
   items,
   category,
   titleKey = "title",
-  type = "general",
   release_date = "release_date",
 }) => {
   return (
-    <div
-      className={`grid lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-8 lg:mb-4 ${
-        type === "recommendations"
-          ? "grid-rows-1 grid-cols-2 mb-1 gap-0"
-          : "grid-rows-4 grid-cols-2 mb-3 gap-2"
-      } `}
-    >
+    <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-8 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-2">
       {items.length > 0 ? (
         items.map((item) => (
           <Link to={`/${category}/${item.id}`} key={item.id}>

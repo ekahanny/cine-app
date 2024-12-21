@@ -15,7 +15,11 @@ export function Carousel({ items, name }) {
   };
 
   if (!items || items.length === 0) {
-    return <p className="text-white text-center">No items available.</p>;
+    return (
+      <p className="text-white font-semibold text-2xl px-6 py-9 italic">
+        No items available..
+      </p>
+    );
   }
 
   return (

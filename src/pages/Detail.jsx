@@ -7,7 +7,7 @@ import axiosClient from "../api/axiosClient";
 import { Carousel } from "../components/elements/Carousel";
 import { Divider } from "../components/elements/Divider";
 import Avatar from "../assets/images/user.png";
-import MovieCard from "../components/elements/MovieCard";
+import { Link } from "react-router-dom";
 
 export function Detail() {
   const { category, id } = useParams();
@@ -67,7 +67,7 @@ export function Detail() {
             language: "en-US",
           }
         );
-        setRecommendations(RecommendationsRes.results.slice(0, 2));
+        setRecommendations(RecommendationsRes.results);
         console.log(RecommendationsRes.results);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -110,7 +110,7 @@ export function Detail() {
           </div>
 
           {/* Konten */}
-          <div className="relative z-10 py-10 flex flex-col justify-center items-center h-full">
+          <div className="relative z-10 pt-10 pb-3 flex flex-col justify-center items-center h-full">
             {/* Poster */}
             <img
               className="w-60 lg:w-64"
@@ -282,20 +282,52 @@ export function Detail() {
               </div>
 
               {/* Recommendations */}
-              <div className="my-10">
+              <div className="mt-10 mb-3">
                 <Divider name="You Might Also Like" />
+                <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
+                  {recommendations.slice(0, 10).map((movie) => (
+                    <div
+                      key={movie.id}
+                      className="carousel-item relative flex flex-col"
+                    >
+                      <Link to={`/${category}/${movie.id}`}>
+                        {/* Poster Recommendation */}
+                        <img
+                          src={
+                            movie.poster_path
+                              ? axiosClient.getImageUrl.w500Image(
+                                  movie.poster_path
+                                )
+                              : "https://via.placeholder.com/500x750?text=No+Image"
+                          }
+                          className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
+                          alt={movie.name}
+                        />
+
+                        <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
+                          <span className="block lg:hidden">
+                            {movie.title.length > 10
+                              ? `${movie.title.slice(0, 10)}...`
+                              : movie.title}
+                          </span>
+                          <span className="hidden lg:block">
+                            {movie.title.length > 15
+                              ? `${movie.title.slice(0, 15)}...`
+                              : movie.title}
+                          </span>
+                        </h1>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <MovieCard
-                items={recommendations}
-                category="movie"
-                titleKey="title"
-                type="recommendations"
-              />
             </div>
           </div>
         </div>
       ) : (
-        <p>No items available.</p>
+        <p className="text-white font-semibold text-2xl px-6 py-5 italic">
+          No items available.
+        </p>
       )}
 
       <Footer />

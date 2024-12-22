@@ -30,18 +30,21 @@ export function Detail() {
         });
         await new Promise((resolve) => setTimeout(resolve, 4000));
         setDetails(response);
+        console.log("Details: ", response);
 
         // Fetch Casts
         const castsResponse = await tmdbApi.getCredits(category, id, {
           language: "en-US",
         });
         setCasts(castsResponse);
+        console.log("Casts: ", castsResponse);
 
         // Fetch Videos
         const videoResponse = await tmdbApi.getVideos(category, id, {
           language: "en-US",
         });
         setVideos(videoResponse.results.slice(0, 8));
+        console.log("Videos: ", videoResponse);
 
         // Fetch Image Preview
         const previewResponse = await tmdbApi.getImgPreview(category, id, {
@@ -49,12 +52,14 @@ export function Detail() {
           include_image_language: "en,null",
         });
         setImgPreview(previewResponse.backdrops.slice(0, 10));
+        console.log("Image Prev: ", previewResponse);
 
         // Fetch Reviews
         const reviewRes = await tmdbApi.getReviews(category, id, {
           language: "en-US",
         });
         setReviews(reviewRes.results);
+        console.log("Reviews: ", reviewRes);
 
         // For the 'Read More...'
         setDisplayedLength(reviewRes.results.map(() => 300));
@@ -68,7 +73,7 @@ export function Detail() {
           }
         );
         setRecommendations(RecommendationsRes.results);
-        console.log(RecommendationsRes.results);
+        console.log("Recommendations: ", RecommendationsRes.results);
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -119,13 +124,19 @@ export function Detail() {
                   ? axiosClient.getImageUrl.originalImage(details.poster_path)
                   : ""
               }
-              alt={details.title}
+              alt={details.title || details.name}
             />
 
             {/* Judul & Tahun */}
             <div className="flex flex-row gap-2 mt-5 text-center px-5">
               <h1 className="text-2xl font-bold text-white">
-                {details.title} ({details.release_date.substring(0, 4)})
+                {details.title || details.name} (
+                {(
+                  details.release_date ||
+                  details.first_air_date ||
+                  ""
+                ).substring(0, 4)}
+                ){" "}
               </h1>
             </div>
             <div className="flex flex-row gap-4">
@@ -143,7 +154,7 @@ export function Detail() {
               </div>
 
               {/* Genre */}
-              {details.genres.slice(0, 2).map((genre) => (
+              {details.genres?.slice(0, 2).map((genre) => (
                 <div className="flex flex-row border my-4 mt-6 border-white bg-[#09093d] p-2 text-sm font-semibold rounded-lg">
                   <p className="text-white items-center">{genre.name}</p>
                 </div>
@@ -275,7 +286,7 @@ export function Detail() {
                     );
                   })
                 ) : (
-                  <p className="text-white font-semibold text-2xl px-6 py-5 italic">
+                  <p className="text-white font-semibold text-2xl px-6 py-5 italic lg:px-10 lg:py-6">
                     No Reviews Yet..
                   </p>
                 )}
@@ -285,35 +296,42 @@ export function Detail() {
               <div className="mt-10 mb-3">
                 <Divider name="You Might Also Like" />
                 <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
-                  {recommendations.slice(0, 10).map((movie) => (
+                  {recommendations.slice(0, 10).map((rec) => (
                     <div
-                      key={movie.id}
+                      key={rec.id}
                       className="carousel-item relative flex flex-col"
                     >
-                      <Link to={`/${category}/${movie.id}`}>
-                        {/* Poster Recommendation */}
+                      <Link to={`/${category}/${rec.id}`}>
                         <img
                           src={
-                            movie.poster_path
+                            rec.poster_path
                               ? axiosClient.getImageUrl.w500Image(
-                                  movie.poster_path
+                                  rec.poster_path
                                 )
                               : "https://via.placeholder.com/500x750?text=No+Image"
                           }
                           className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
-                          alt={movie.name}
+                          alt={rec.title || rec.name || "Unknown"}
                         />
 
                         <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
                           <span className="block lg:hidden">
-                            {movie.title.length > 10
-                              ? `${movie.title.slice(0, 10)}...`
-                              : movie.title}
+                            {rec.title?.length > 10
+                              ? `${rec.title.slice(0, 10)}...`
+                              : rec.title ||
+                                (rec.name?.length > 10
+                                  ? `${rec.name.slice(0, 10)}...`
+                                  : rec.name) ||
+                                "No Title"}
                           </span>
                           <span className="hidden lg:block">
-                            {movie.title.length > 15
-                              ? `${movie.title.slice(0, 15)}...`
-                              : movie.title}
+                            {rec.title?.length > 15
+                              ? `${rec.title.slice(0, 15)}...`
+                              : rec.title ||
+                                (rec.name?.length > 15
+                                  ? `${rec.name.slice(0, 15)}...`
+                                  : rec.name) ||
+                                "No Title"}
                           </span>
                         </h1>
                       </Link>

@@ -38,7 +38,7 @@ export const MovieCard = ({
                 src={
                   item.poster_path
                     ? axiosClient.getImageUrl.originalImage(item.poster_path)
-                    : ""
+                    : "https://via.placeholder.com/500x750?text=No+Image"
                 }
                 alt={item[titleKey]}
               />

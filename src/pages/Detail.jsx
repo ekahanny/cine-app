@@ -28,7 +28,7 @@ export function Detail() {
         const response = await tmdbApi.getDetails(category, id, {
           language: "en-US",
         });
-        await new Promise((resolve) => setTimeout(resolve, 4000));
+        await new Promise((resolve) => setTimeout(resolve, 6000));
         setDetails(response);
         console.log("Details: ", response);
 
@@ -162,7 +162,7 @@ export function Detail() {
             </div>
 
             {/* Deskripsi Singkat */}
-            <p className="text-white text-sm font-semibold text-center mt-2 px-6 leading-5 lg:px-60">
+            <p className="text-white text-sm lg:text-2xl font-semibold text-center mt-2 px-6 leading-5 lg:px-60">
               {details.overview}
             </p>
 

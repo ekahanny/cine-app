@@ -3,7 +3,6 @@ import MovieCard from "../components/elements/MovieCard";
 import { Footer } from "../components/layouts/Footer";
 import { NavBar } from "../components/layouts/NavBar";
 import tmdbApi, { movieType } from "../api/tmdbApi";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 export function Movie() {
   const [movies, setMovies] = useState([]);

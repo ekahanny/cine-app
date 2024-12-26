@@ -129,7 +129,7 @@ export function Detail() {
 
             {/* Judul & Tahun */}
             <div className="flex flex-row gap-2 mt-5 text-center px-5">
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-lg font-bold text-white">
                 {details.title || details.name} (
                 {(
                   details.release_date ||

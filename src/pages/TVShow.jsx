@@ -7,26 +7,52 @@ import tmdbApi, { tvType } from "../api/tmdbApi";
 export function TVShow() {
   const [tvShows, setTvShows] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(tvType.popular);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [page, setPages] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchTvShows = async (currentPage) => {
+    try {
+      const response = await tmdbApi.getTvShows(selectedCategory, {
+        language: "en-US",
+        page: currentPage,
+      });
+      setTvShows((prevTvShow) => [...prevTvShow, ...response.results]);
+
+      if (currentPage >= response.total_pages) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching TV shows:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTvShows = async () => {
-      setLoading(true);
+    const loadInitialTVShow = async () => {
       try {
         const response = await tmdbApi.getTvShows(selectedCategory, {
           language: "en-US",
           page: 1,
         });
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        setTvShows(response.results);
+
+        setTimeout(() => {
+          setTvShows(response.results);
+          setLoading(false);
+        }, 4000);
       } catch (error) {
-        console.error("Error fetching TV shows:", error);
-      } finally {
+        console.error("Error fetching initial TV Show: ", error);
         setLoading(false);
       }
     };
-    fetchTvShows();
+
+    loadInitialTVShow();
   }, [selectedCategory]);
+
+  const loadPages = async () => {
+    const nextPage = page + 1;
+    await fetchTvShows(nextPage);
+    setPages(nextPage);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -61,6 +87,18 @@ export function TVShow() {
             type="general"
             release_date="first_air_date"
           />
+
+          {hasMore && (
+            <div className="flex justify-center mt-2 mb-6">
+              <button
+                onClick={loadPages}
+                disabled={loading}
+                className="btn btn-outline btn-primary"
+              >
+                Show More
+              </button>
+            </div>
+          )}
         </>
       )}
       <Footer />

@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 
 export const category = {
@@ -61,6 +62,11 @@ const tmdbApi = {
 
   getRecommendations: (category, id, params = {}) => {
     const url = `${category}/${id}/recommendations`;
+    return axiosClient.get(url, { params });
+  },
+
+  getPerson: (id, params = {}) => {
+    const url = `person/${id}`;
     return axiosClient.get(url, { params });
   },
 };

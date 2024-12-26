@@ -161,7 +161,7 @@ export function NavBar() {
                   TV Show
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/genre"
                   className={({ isActive }) =>
@@ -184,7 +184,7 @@ export function NavBar() {
                 >
                   Profile
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

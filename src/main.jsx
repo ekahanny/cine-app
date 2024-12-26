@@ -6,7 +6,7 @@ import { Home } from "./pages/Home.jsx";
 import { Movie } from "./pages/Movie.jsx";
 import { TVShow } from "./pages/TVShow.jsx";
 import { Genre } from "./pages/Genre.jsx";
-import { Profile } from "./pages/Profile.jsx";
+import { Person } from "./pages/Person.jsx";
 import { Detail } from "./pages/Detail.jsx";
 
 const router = createBrowserRouter([
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
     element: <Genre />,
   },
   {
-    path: "/profile",
-    element: <Profile />,
+    path: "/person/:id",
+    element: <Person />,
   },
   {
     path: "/:category/:id",

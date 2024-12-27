@@ -87,7 +87,6 @@ export function Movie() {
             items={movies}
             category="movie"
             titleKey="title"
-            type="general"
             release_date="release_date"
           />
 

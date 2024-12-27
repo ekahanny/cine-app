@@ -35,6 +35,8 @@ export function Detail() {
         const castsResponse = await tmdbApi.getCredits(category, id, {
           language: "en-US",
         });
+        console.log("Casts response: ", castsResponse);
+
         setCasts(castsResponse);
 
         // Fetch Videos
@@ -160,38 +162,44 @@ export function Detail() {
               {details.overview}
             </p>
 
-            {/* Carousel Casts */}
             <div className="mt-3">
+              {/* Carousel Casts */}
               <Divider name="Casts" />
               <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
-                {casts?.cast?.slice(0, 10).map((cast) => (
-                  <div key={cast.id} className="carousel-item relative">
-                    <Link to={`/person/${cast.id}`} key={cast.id}>
-                      {/* Gambar Cast */}
-                      <img
-                        src={
-                          cast.profile_path
-                            ? axiosClient.getImageUrl.w500Image(
-                                cast.profile_path
-                              )
-                            : "https://via.placeholder.com/500x750?text=No+Image"
-                        }
-                        className="rounded-box object-cover w-full h-full"
-                        alt={cast.name}
-                      />
+                {casts?.cast?.length > 0 ? (
+                  casts.cast.slice(0, 10).map((cast) => (
+                    <div key={cast.id} className="carousel-item relative">
+                      <Link to={`/person/${cast.id}`} key={cast.id}>
+                        {/* Gambar Cast */}
+                        <img
+                          src={
+                            cast.profile_path
+                              ? axiosClient.getImageUrl.w500Image(
+                                  cast.profile_path
+                                )
+                              : "https://via.placeholder.com/500x750?text=No+Image"
+                          }
+                          className="rounded-box object-cover w-full h-full"
+                          alt={cast.name}
+                        />
 
-                      {/* Overlay Hitam */}
-                      <div className="absolute inset-0  flex items-end justify-center">
-                        <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
-                          {cast.name} <br />
-                          <span className="text-sm italic">
-                            as {cast.character}
-                          </span>
-                        </p>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
+                        {/* Overlay Hitam */}
+                        <div className="absolute inset-0 flex items-end justify-center">
+                          <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
+                            {cast.name} <br />
+                            <span className="text-sm italic">
+                              as {cast.character}
+                            </span>
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-white font-semibold text-2xl px-6 py-5 italic lg:px-10 lg:py-6">
+                    No Casts Available...
+                  </p>
+                )}
               </div>
 
               {/* Movie Poster */}

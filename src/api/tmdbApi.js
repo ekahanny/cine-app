@@ -69,6 +69,16 @@ const tmdbApi = {
     const url = `person/${id}`;
     return axiosClient.get(url, { params });
   },
+
+  getPersonImage: (id, params = {}) => {
+    const url = `person/${id}/images`;
+    return axiosClient.get(url, { params });
+  },
+
+  getPersonCredits: (id, params = {}) => {
+    const url = `person/${id}/combined_credits`;
+    return axiosClient.get(url, { params });
+  },
 };
 
 export default tmdbApi;

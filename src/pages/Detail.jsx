@@ -30,21 +30,18 @@ export function Detail() {
         });
         await new Promise((resolve) => setTimeout(resolve, 6000));
         setDetails(response);
-        console.log("Details: ", response);
 
         // Fetch Casts
         const castsResponse = await tmdbApi.getCredits(category, id, {
           language: "en-US",
         });
         setCasts(castsResponse);
-        console.log("Casts: ", castsResponse);
 
         // Fetch Videos
         const videoResponse = await tmdbApi.getVideos(category, id, {
           language: "en-US",
         });
         setVideos(videoResponse.results.slice(0, 8));
-        console.log("Videos: ", videoResponse);
 
         // Fetch Image Preview
         const previewResponse = await tmdbApi.getImgPreview(category, id, {
@@ -52,14 +49,12 @@ export function Detail() {
           include_image_language: "en,null",
         });
         setImgPreview(previewResponse.backdrops.slice(0, 10));
-        console.log("Image Prev: ", previewResponse);
 
         // Fetch Reviews
         const reviewRes = await tmdbApi.getReviews(category, id, {
           language: "en-US",
         });
         setReviews(reviewRes.results);
-        console.log("Reviews: ", reviewRes);
 
         // For the 'Read More...'
         setDisplayedLength(reviewRes.results.map(() => 300));
@@ -73,7 +68,6 @@ export function Detail() {
           }
         );
         setRecommendations(RecommendationsRes.results);
-        console.log("Recommendations: ", RecommendationsRes.results);
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -172,26 +166,30 @@ export function Detail() {
               <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
                 {casts?.cast?.slice(0, 10).map((cast) => (
                   <div key={cast.id} className="carousel-item relative">
-                    {/* Gambar Cast */}
-                    <img
-                      src={
-                        cast.profile_path
-                          ? axiosClient.getImageUrl.w500Image(cast.profile_path)
-                          : "https://via.placeholder.com/500x750?text=No+Image"
-                      }
-                      className="rounded-box object-cover w-full h-full"
-                      alt={cast.name}
-                    />
+                    <Link to={`/person/${cast.id}`} key={cast.id}>
+                      {/* Gambar Cast */}
+                      <img
+                        src={
+                          cast.profile_path
+                            ? axiosClient.getImageUrl.w500Image(
+                                cast.profile_path
+                              )
+                            : "https://via.placeholder.com/500x750?text=No+Image"
+                        }
+                        className="rounded-box object-cover w-full h-full"
+                        alt={cast.name}
+                      />
 
-                    {/* Overlay Hitam */}
-                    <div className="absolute inset-0  flex items-end justify-center">
-                      <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
-                        {cast.name} <br />
-                        <span className="text-sm italic">
-                          as {cast.character}
-                        </span>
-                      </p>
-                    </div>
+                      {/* Overlay Hitam */}
+                      <div className="absolute inset-0  flex items-end justify-center">
+                        <p className="text-white text-center font-semibold bg-black bg-opacity-50 w-full py-2">
+                          {cast.name} <br />
+                          <span className="text-sm italic">
+                            as {cast.character}
+                          </span>
+                        </p>
+                      </div>
+                    </Link>
                   </div>
                 ))}
               </div>

@@ -5,16 +5,18 @@ import { NavBar } from "../components/layouts/NavBar";
 import tmdbApi from "../api/tmdbApi";
 import axiosClient from "../api/axiosClient";
 import { Divider } from "../components/elements/Divider";
-import MovieCard from "../components/elements/MovieCard";
 
 export function Person() {
   const { id } = useParams(); // Ambil id dari parameter URL
+  const [loading, setLoading] = useState(false);
   const [personDetail, setPersonDetail] = useState(null);
   const [imagesCollections, setImagesCollections] = useState([]);
   const [credits, setCredits] = useState([]);
+  const [visibleCredits, setVisibleCredits] = useState(10);
 
   useEffect(() => {
     const fetchPerson = async () => {
+      setLoading(true);
       try {
         // Fetch Detail of Person
         const response = await tmdbApi.getPerson(id, {
@@ -34,25 +36,37 @@ export function Person() {
           language: "en-US",
         });
         setCredits(creditRes.cast);
-        console.log("Credit Response: ", creditRes.cast);
+        console.log("Credit Response: ", creditRes);
       } catch (error) {
         console.error("Can't fetch details of this person");
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 4000);
       }
     };
 
     fetchPerson();
   }, []);
 
+  const handleShowMore = () => {
+    setVisibleCredits((prevCredits) => prevCredits + 10);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
-      {personDetail ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-bars loading-lg text-info"></span>
+        </div>
+      ) : personDetail ? (
         <div className="relative flex-1 h-screen lg:h-80">
           {/* Image, Name, & Description */}
           <div className="flex flex-col justify-center items-center">
             {/* Image */}
             <img
-              className="object-cover w-44"
+              className="object-cover w-44 border border-white rounded-lg mt-6"
               src={
                 personDetail.profile_path
                   ? axiosClient.getImageUrl.w500Image(personDetail.profile_path)
@@ -64,16 +78,24 @@ export function Person() {
             <div className="flex flex-col justify-center items-center">
               <h1 className="text-white text-2xl font-semibold my-3">
                 {personDetail.name} (
-                {personDetail.deathday !== null
-                  ? `${personDetail.birthday.slice(
-                      0,
-                      4
-                    )} - ${personDetail.deathday.slice(0, 4)}`
-                  : personDetail.birthday.slice(0, 4)}
+                {personDetail.deathday
+                  ? `${
+                      personDetail.birthday
+                        ? personDetail.birthday.slice(0, 4)
+                        : "Unknown"
+                    } - ${personDetail.deathday.slice(0, 4)}`
+                  : personDetail.birthday
+                  ? personDetail.birthday.slice(0, 4)
+                  : "Unknown"}
                 )
               </h1>
-              <p className="text-white text-center px-7 mb-3">
+              {/* Deskripsi di viewport small */}
+              <p className="text-white text-center px-7 mb-3 block lg:hidden">
                 {personDetail.biography.slice(0, 400)}...
+              </p>
+              {/* Deskripsi di viewport large */}
+              <p className="text-white text-center px-24 mb-3 hidden lg:block">
+                {personDetail.biography.slice(0, 750)}...
               </p>
             </div>
           </div>
@@ -106,11 +128,12 @@ export function Person() {
             </div>
           </div>
 
+          {/* List of Credits */}
           <div>
             <Divider name="Credits" />
-            <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-3 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-2">
+            <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-3 lg:mb-4 grid-cols-2 mb-3">
               {Array.isArray(credits) && credits.length > 0 ? (
-                credits.map((credit, index) => {
+                credits.slice(0, visibleCredits).map((credit, index) => {
                   const isTV = credit.media_type === "tv"; // Check media type
                   const displayTitle = isTV ? credit.name : credit.title;
                   const displayDate = isTV
@@ -130,6 +153,7 @@ export function Person() {
                         }
                         alt={displayTitle || "Untitled"}
                       />
+
                       <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
                         <span className="block lg:hidden">
                           {displayTitle && displayTitle.length > 14
@@ -154,6 +178,18 @@ export function Person() {
                 </p>
               )}
             </div>
+
+            {/* Button Show More */}
+            {visibleCredits < credits.length && (
+              <div className="flex justify-center mt-2 mb-6">
+                <button
+                  onClick={handleShowMore}
+                  className="btn btn-outline btn-primary"
+                >
+                  Show More
+                </button>
+              </div>
+            )}
           </div>
         </div>
       ) : (

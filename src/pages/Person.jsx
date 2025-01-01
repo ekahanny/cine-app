@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Import useParams
+import { Link, useParams } from "react-router-dom"; // Import useParams
 import { Footer } from "../components/layouts/Footer";
 import { NavBar } from "../components/layouts/NavBar";
 import tmdbApi from "../api/tmdbApi";
@@ -141,35 +141,40 @@ export function Person() {
                     : credit.release_date;
 
                   return (
-                    <div key={index} className="card relative">
-                      <img
-                        className="w-40 lg:w-64 lg:mt-3 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
-                        src={
-                          credit.poster_path
-                            ? axiosClient.getImageUrl.originalImage(
-                                credit.poster_path
-                              )
-                            : "https://via.placeholder.com/500x750?text=No+Image"
-                        }
-                        alt={displayTitle || "Untitled"}
-                      />
+                    <Link
+                      to={`/${credit.media_type}/${credit.id}`}
+                      key={credit.id}
+                    >
+                      <div key={index} className="card relative">
+                        <img
+                          className="w-40 lg:w-64 lg:mt-3 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
+                          src={
+                            credit.poster_path
+                              ? axiosClient.getImageUrl.originalImage(
+                                  credit.poster_path
+                                )
+                              : "https://via.placeholder.com/500x750?text=No+Image"
+                          }
+                          alt={displayTitle || "Untitled"}
+                        />
 
-                      <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
-                        <span className="block lg:hidden">
-                          {displayTitle && displayTitle.length > 14
-                            ? `${displayTitle.slice(0, 14)}...`
-                            : displayTitle || "Untitled"}
-                        </span>
-                        <span className="hidden lg:block">
-                          {displayTitle && displayTitle.length > 24
-                            ? `${displayTitle.slice(0, 24)}...`
-                            : displayTitle || "Untitled"}
-                        </span>
-                      </h1>
-                      <p className="text-white text-lg mb-4">
-                        ({displayDate?.substring(0, 4) || "N/A"})
-                      </p>
-                    </div>
+                        <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
+                          <span className="block lg:hidden">
+                            {displayTitle && displayTitle.length > 14
+                              ? `${displayTitle.slice(0, 14)}...`
+                              : displayTitle || "Untitled"}
+                          </span>
+                          <span className="hidden lg:block">
+                            {displayTitle && displayTitle.length > 24
+                              ? `${displayTitle.slice(0, 24)}...`
+                              : displayTitle || "Untitled"}
+                          </span>
+                        </h1>
+                        <p className="text-white text-lg mb-4">
+                          ({displayDate?.substring(0, 4) || "N/A"})
+                        </p>
+                      </div>
+                    </Link>
                   );
                 })
               ) : (

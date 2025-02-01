@@ -30,9 +30,14 @@ const tmdbApi = {
     return axiosClient.get(url, { params });
   },
 
-  search: (category, query, params = {}) => {
-    const url = `search/${category}`;
-    return axiosClient.get(url, { params: { query, ...params } });
+  getSearch: (query, params = {}) => {
+    const url = `search/multi`;
+    return axiosClient.get(url, {
+      params: {
+        query,
+        ...params,
+      },
+    });
   },
 
   getDetails: (category, id, params = {}) => {

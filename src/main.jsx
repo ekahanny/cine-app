@@ -8,6 +8,7 @@ import { TVShow } from "./pages/TVShow.jsx";
 import { Genre } from "./pages/Genre.jsx";
 import { Person } from "./pages/Person.jsx";
 import { Detail } from "./pages/Detail.jsx";
+import { Search } from "./pages/Search.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/:category/:id",
     element: <Detail />,
+  },
+  {
+    path: "/search",
+    element: <Search />,
   },
 ]);
 

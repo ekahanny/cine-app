@@ -1,6 +1,16 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export function NavBar() {
+  const [searchResult, setSearchResult] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter" && searchResult.trim() !== "") {
+      navigate(`/search?query=${searchResult.trim()}`);
+    }
+  };
+
   return (
     <>
       <nav className="bg-gray-900 border border-x-gray-900 border-t-gray-900 border-b-indigo-500/50 dark:bg-gray-900">
@@ -67,6 +77,9 @@ export function NavBar() {
                 id="search-navbar"
                 className="block w-full p-2 ps-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search..."
+                value={searchResult}
+                onChange={(e) => setSearchResult(e.target.value)}
+                onKeyDown={handleSearch}
               ></input>
             </div>
             <button
@@ -116,12 +129,12 @@ export function NavBar() {
                   />
                 </svg>
               </div>
-              <input
+              {/* <input
                 type="text"
                 id="search-navbar"
                 className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search..."
-              ></input>
+              ></input> */}
             </div>
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <li>

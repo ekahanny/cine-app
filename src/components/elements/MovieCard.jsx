@@ -9,7 +9,7 @@ export const MovieCard = ({
   release_date = "release_date",
 }) => {
   return (
-    <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-3 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-2">
+    <div className="grid md:grid-cols-3 lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-8 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-2">
       {items.length > 0 ? (
         items.map((item) => (
           <Link to={`/${category}/${item.id}`} key={item.id}>
@@ -38,7 +38,7 @@ export const MovieCard = ({
                 src={
                   item.poster_path
                     ? axiosClient.getImageUrl.originalImage(item.poster_path)
-                    : "https://via.placeholder.com/500x750?text=No+Image"
+                    : "https://placehold.co/500x750?text=No+Image"
                 }
                 alt={item[titleKey]}
               />
@@ -55,7 +55,7 @@ export const MovieCard = ({
                 </span>
               </h1>
               <p className="text-white text-lg mb-4">
-                ({item[release_date].substring(0, 4)})
+                ({item[release_date].substring(0, 4) || "N/A"})
               </p>
             </div>
           </Link>

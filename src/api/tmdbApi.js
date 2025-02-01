@@ -19,6 +19,12 @@ export const tvType = {
   top_rated: "top_rated",
 };
 
+export const searchType = {
+  movie: "movie",
+  person: "person",
+  tv: "tv",
+};
+
 const tmdbApi = {
   getMovies: (type, params = {}) => {
     const url = `movie/${movieType[type]}`;
@@ -30,8 +36,8 @@ const tmdbApi = {
     return axiosClient.get(url, { params });
   },
 
-  getSearch: (query, params = {}) => {
-    const url = `search/multi`;
+  getSearch: (query, type, params = {}) => {
+    const url = `search/${searchType[type]}`;
     return axiosClient.get(url, {
       params: {
         query,

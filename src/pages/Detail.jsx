@@ -177,7 +177,7 @@ export function Detail() {
                               ? axiosClient.getImageUrl.w500Image(
                                   cast.profile_path
                                 )
-                              : "https://via.placeholder.com/500x750?text=No+Image"
+                              : "https://placehold.co/500x750?text=No+Image"
                           }
                           className="rounded-box object-cover w-full h-full"
                           alt={cast.name}
@@ -314,7 +314,7 @@ export function Detail() {
                               ? axiosClient.getImageUrl.w500Image(
                                   rec.poster_path
                                 )
-                              : "https://via.placeholder.com/500x750?text=No+Image"
+                              : "https://placehold.co/500x750?text=No+Image"
                           }
                           className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
                           alt={rec.title || rec.name || "Unknown"}

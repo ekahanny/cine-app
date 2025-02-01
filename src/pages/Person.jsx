@@ -70,7 +70,7 @@ export function Person() {
               src={
                 personDetail.profile_path
                   ? axiosClient.getImageUrl.w500Image(personDetail.profile_path)
-                  : "https://via.placeholder.com/500x750?text=No+Image"
+                  : "https://placehold.co/500x750?text=No+Image"
               }
               alt={personDetail.name}
             />
@@ -114,7 +114,7 @@ export function Person() {
                       src={
                         image.file_path
                           ? axiosClient.getImageUrl.w500Image(image.file_path)
-                          : "https://via.placeholder.com/500x750?text=No+Image"
+                          : "https://placehold.co/500x750?text=No+Image"
                       }
                       className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
                     />
@@ -153,7 +153,7 @@ export function Person() {
                               ? axiosClient.getImageUrl.originalImage(
                                   credit.poster_path
                                 )
-                              : "https://via.placeholder.com/500x750?text=No+Image"
+                              : "https://placehold.co/500x750?text=No+Image"
                           }
                           alt={displayTitle || "Untitled"}
                         />

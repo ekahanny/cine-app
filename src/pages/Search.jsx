@@ -3,7 +3,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import tmdbApi, { searchType } from "../api/tmdbApi";
 import { NavBar } from "../components/layouts/NavBar";
 import { Footer } from "../components/layouts/Footer";
-import MovieCard from "../components/elements/MovieCard";
 import axiosClient from "../api/axiosClient";
 
 export function Search() {
@@ -44,7 +43,7 @@ export function Search() {
   }, [query, selectedCategory]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <NavBar />
       <div className="lg:px-12 lg:py-6 py-2 min-h-screen">
         {/* Search Bar & Category */}
@@ -96,12 +95,18 @@ export function Search() {
         </div>
 
         {/* Search Results */}
-        <div className="grid md:grid-cols-3 lg:grid-cols-5 mt-6 lg:mt-7 ml-5 lg:ml-8 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-2">
+        <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-8 mr-3 lg:mr-6 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-1 lg:gap-2">
           {results.length > 0 ? (
             results.map((result) => (
               <Link to={`/${selectedCategory}/${result.id}`} key={result.id}>
                 <div key={result.id} className="card relative">
-                  <p className="flex flex-row items-center absolute text-white m-2 lg:ml-4 lg:mt-6 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100">
+                  <p
+                    className={`${
+                      selectedCategory === searchType.person
+                        ? "hidden"
+                        : "flex flex-row items-center absolute text-white m-2 lg:ml-4 lg:mt-6 border border-white bg-[#09093d] w-fit px-4 py-1 text-sm font-semibold rounded-full z-10 hover:scale-100"
+                    }`}
+                  >
                     <svg
                       width="18"
                       height="20"
@@ -117,42 +122,64 @@ export function Search() {
                         stroke-width="2"
                       />
                     </svg>
-                    {result.vote_average.toFixed(1)}
+                    {result.vote_average
+                      ? result.vote_average.toFixed(1)
+                      : "N/A"}
                   </p>
 
                   <img
                     className="w-40 lg:w-64 lg:mt-3 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
                     src={
-                      result.poster_path
+                      result.profile_path || result.poster_path
                         ? axiosClient.getImageUrl.originalImage(
-                            result.poster_path
+                            selectedCategory === searchType.person
+                              ? result.profile_path
+                              : result.poster_path
                           )
                         : "https://placehold.co/500x750?text=No+Image"
                     }
-                    alt={result.title}
+                    alt={result.name || result.title}
                   />
 
                   <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
                     <span className="block lg:hidden">
-                      {result.title.length > 14
+                      {selectedCategory === searchType.person
+                        ? result.name || "N/A"
+                        : selectedCategory === searchType.tv
+                        ? result.name && result.name.length > 14
+                          ? `${result.name.slice(0, 14)}...`
+                          : result.name || "N/A"
+                        : result.title && result.title.length > 14
                         ? `${result.title.slice(0, 14)}...`
-                        : result.title}
+                        : result.title || "N/A"}
                     </span>
                     <span className="hidden lg:block">
-                      {result.title.length > 24
+                      {selectedCategory === searchType.person
+                        ? result.name || "N/A"
+                        : selectedCategory === searchType.tv
+                        ? result.name && result.name.length > 24
+                          ? `${result.name.slice(0, 24)}...`
+                          : result.name || "N/A"
+                        : result.title && result.title.length > 24
                         ? `${result.title.slice(0, 24)}...`
-                        : result.title}
+                        : result.title || "N/A"}
                     </span>
                   </h1>
 
                   <p className="text-white text-lg mb-4">
-                    ({result.release_date.substring(0, 4) || "N/A"})
+                    {selectedCategory === searchType.person
+                      ? ""
+                      : `(${
+                          result.release_date?.substring(0, 4) ||
+                          result.first_air_date?.substring(0, 4) ||
+                          "N/A"
+                        })`}
                   </p>
                 </div>
               </Link>
             ))
           ) : (
-            <p>No Items Available.</p>
+            <p className="text-white text-2xl">Your results shows here.</p>
           )}
         </div>
 
@@ -174,6 +201,6 @@ export function Search() {
         )} */}
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

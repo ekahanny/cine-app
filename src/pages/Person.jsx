@@ -131,7 +131,7 @@ export function Person() {
           {/* List of Credits */}
           <div>
             <Divider name="Credits" />
-            <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-3 lg:mb-4 grid-cols-2 mb-3">
+            <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-9 lg:mb-4 grid-cols-2 mb-3">
               {Array.isArray(credits) && credits.length > 0 ? (
                 credits.slice(0, visibleCredits).map((credit, index) => {
                   const isTV = credit.media_type === "tv"; // Check media type

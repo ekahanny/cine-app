@@ -179,7 +179,9 @@ export function Search() {
               </Link>
             ))
           ) : (
-            <p className="text-white text-2xl">Your results shows here.</p>
+            <p className="text-white font-semibold lg:text-2xl">
+              Your results shows here.
+            </p>
           )}
         </div>
 

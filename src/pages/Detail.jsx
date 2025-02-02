@@ -118,7 +118,7 @@ export function Detail() {
               src={
                 details.poster_path
                   ? axiosClient.getImageUrl.originalImage(details.poster_path)
-                  : ""
+                  : "https://placehold.co/500x750?text=No+Image"
               }
               alt={details.title || details.name}
             />
@@ -197,7 +197,7 @@ export function Detail() {
                   ))
                 ) : (
                   <p className="text-white font-semibold text-2xl px-6 py-5 italic lg:px-10 lg:py-6">
-                    No Casts Available...
+                    No items available..{" "}
                   </p>
                 )}
               </div>
@@ -293,7 +293,7 @@ export function Detail() {
                   })
                 ) : (
                   <p className="text-white font-semibold text-2xl px-6 py-5 italic lg:px-10 lg:py-6">
-                    No Reviews Yet..
+                    No items available..
                   </p>
                 )}
               </div>
@@ -302,47 +302,53 @@ export function Detail() {
               <div className="mt-10 mb-3">
                 <Divider name="You Might Also Like" />
                 <div className="carousel carousel-center max-w-sm h-72 space-x-2 py-2 px-2 lg:max-w-none lg:px-5 mt-2">
-                  {recommendations.slice(0, 10).map((rec) => (
-                    <div
-                      key={rec.id}
-                      className="carousel-item relative flex flex-col"
-                    >
-                      <Link to={`/${category}/${rec.id}`}>
-                        <img
-                          src={
-                            rec.poster_path
-                              ? axiosClient.getImageUrl.w500Image(
-                                  rec.poster_path
-                                )
-                              : "https://placehold.co/500x750?text=No+Image"
-                          }
-                          className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
-                          alt={rec.title || rec.name || "Unknown"}
-                        />
+                  {recommendations.length > 0 ? (
+                    recommendations.slice(0, 10).map((rec) => (
+                      <div
+                        key={rec.id}
+                        className="carousel-item relative flex flex-col"
+                      >
+                        <Link to={`/${category}/${rec.id}`}>
+                          <img
+                            src={
+                              rec.poster_path
+                                ? axiosClient.getImageUrl.w500Image(
+                                    rec.poster_path
+                                  )
+                                : "https://placehold.co/500x750?text=No+Image"
+                            }
+                            className="w-40 rounded-lg border border-white transform transition-transform duration-300 hover:scale-105"
+                            alt={rec.title || rec.name || "Unknown"}
+                          />
 
-                        <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
-                          <span className="block lg:hidden">
-                            {rec.title?.length > 10
-                              ? `${rec.title.slice(0, 10)}...`
-                              : rec.title ||
-                                (rec.name?.length > 10
-                                  ? `${rec.name.slice(0, 10)}...`
-                                  : rec.name) ||
-                                "No Title"}
-                          </span>
-                          <span className="hidden lg:block">
-                            {rec.title?.length > 15
-                              ? `${rec.title.slice(0, 15)}...`
-                              : rec.title ||
-                                (rec.name?.length > 15
-                                  ? `${rec.name.slice(0, 15)}...`
-                                  : rec.name) ||
-                                "No Title"}
-                          </span>
-                        </h1>
-                      </Link>
-                    </div>
-                  ))}
+                          <h1 className="text-white mt-2 lg:mt-3 font-semibold text-lg">
+                            <span className="block lg:hidden">
+                              {rec.title?.length > 10
+                                ? `${rec.title.slice(0, 10)}...`
+                                : rec.title ||
+                                  (rec.name?.length > 10
+                                    ? `${rec.name.slice(0, 10)}...`
+                                    : rec.name) ||
+                                  "No Title"}
+                            </span>
+                            <span className="hidden lg:block">
+                              {rec.title?.length > 15
+                                ? `${rec.title.slice(0, 15)}...`
+                                : rec.title ||
+                                  (rec.name?.length > 15
+                                    ? `${rec.name.slice(0, 15)}...`
+                                    : rec.name) ||
+                                  "No Title"}
+                            </span>
+                          </h1>
+                        </Link>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-white font-semibold text-2xl px-6 py-5 italic lg:px-10 lg:py-6">
+                      No items available..
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -350,7 +356,7 @@ export function Detail() {
         </div>
       ) : (
         <p className="text-white font-semibold text-2xl px-6 py-5 italic">
-          No items available.
+          No items available..
         </p>
       )}
 

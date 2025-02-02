@@ -21,25 +21,31 @@ export function Search() {
   };
 
   useEffect(() => {
+    let timeoutId;
     const fetchSearchResults = async () => {
-      if (!query) return;
-      setLoading(true);
-
-      try {
-        const res = await tmdbApi.getSearch(query, selectedCategory, {
-          query,
-          language: "en-US",
-        });
-        setResults(res.results || []);
-        console.log(res);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      } finally {
-        setLoading(false);
+      if (!query) {
+        setResults([]);
+        return;
       }
-    };
 
+      setLoading(true);
+      timeoutId = setTimeout(async () => {
+        try {
+          const res = await tmdbApi.getSearch(query, selectedCategory, {
+            query,
+            language: "en-US",
+          });
+          setResults(res.results || []);
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+        } finally {
+          setLoading(false);
+        }
+      }, 2000);
+    };
     fetchSearchResults();
+
+    return () => clearTimeout(timeoutId);
   }, [query, selectedCategory]);
 
   return (
@@ -94,10 +100,17 @@ export function Search() {
           </div>
         </div>
 
-        {/* Search Results */}
-        <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-8 mr-3 lg:mr-6 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-1 lg:gap-2">
-          {results.length > 0 ? (
-            results.map((result) => (
+        {loading ? (
+          <div className="flex justify-center items-center h-screen">
+            <span className="loading loading-bars loading-lg text-info"></span>
+          </div>
+        ) : query === "" ? (
+          <p className="text-white font-semibold lg:text-2xl px-6 py-5">
+            Your results shows here.
+          </p>
+        ) : results.length > 0 ? (
+          <div className="grid lg:grid-cols-5 mt-6 lg:mt-7 ml-6 lg:ml-8 mr-3 lg:mr-6 lg:mb-4 grid-rows-4 grid-cols-2 mb-3 gap-1 lg:gap-2">
+            {results.map((result) => (
               <Link to={`/${selectedCategory}/${result.id}`} key={result.id}>
                 <div key={result.id} className="card relative">
                   <p
@@ -177,30 +190,13 @@ export function Search() {
                   </p>
                 </div>
               </Link>
-            ))
-          ) : (
-            <p className="text-white font-semibold lg:text-2xl">
-              Your results shows here.
-            </p>
-          )}
-        </div>
-
-        {/* {loading ? (
-          <p>Loading...</p>
-        ) : results.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-            {results.map((result) => (
-              <div key={result.id} className="border p-4 rounded shadow">
-                <h2 className="text-xl font-semibold">
-                  {result.title || result.name}
-                </h2>
-                <p>{result.overview || "No description available."}</p>
-              </div>
             ))}
           </div>
         ) : (
-          <p>No results found.</p>
-        )} */}
+          <p className="text-white font-semibold lg:text-2xl px-6 py-5 italic">
+            No items available..
+          </p>
+        )}
       </div>
       <Footer />
     </div>

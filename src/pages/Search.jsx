@@ -15,76 +15,69 @@ export function Search() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const handleSearch = (e) => {
     if (e.key === "Enter" && searchResult.trim() !== "") {
       e.preventDefault();
       setSearchParams({ query: searchResult.trim() });
-      setResults([]); // Reset hasil pencarian
+      setResults([]);
       setCurrentPage(1);
       setHasMore(true);
-      setIsFirstLoad(true); 
+    }
+  };
+
+  const fetchSearchResults = async (currentPage) => {
+    try {
+      const response = await tmdbApi.getSearch(query, selectedCategory, {
+        query,
+        language: "en-US",
+        page: currentPage,
+      });
+      setResults((prevResults) => [...prevResults, ...response.results]);
+
+      if (currentPage >= response.total_pages) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching movies: ", error);
     }
   };
 
   useEffect(() => {
-    if (!query) {
-      setResults([]);
-      setHasMore(false);
-      return;
-    }
-
-    const fetchSearchResults = async () => {
-      setLoading(true);
-
+    const loadInitialSearch = async () => {
       try {
-        const res = await tmdbApi.getSearch(query, selectedCategory, {
-          query,
+        setLoading(true);
+        const response = await tmdbApi.getSearch(query, selectedCategory, {
           language: "en-US",
-          page: currentPage,
+          page: 1,
         });
-
-        if (isFirstLoad) {
-          setTimeout(() => {
-            setResults((prevResults) =>
-              currentPage === 1
-                ? res.results || []
-                : [...prevResults, ...(res.results || [])]
-            );
-            setHasMore(currentPage < res.total_pages);
-            setLoading(false);
-            setIsFirstLoad(false); // Setelah pertama kali selesai, set isFirstLoad ke false
-          }, 2000);
-        } else {
-          setResults((prevResults) =>
-            currentPage === 1
-              ? res.results || []
-              : [...prevResults, ...(res.results || [])]
-          );
-          setHasMore(currentPage < res.total_pages);
+        setTimeout(() => {
+          setResults(response.results);
           setLoading(false);
-        }
+        }, 4000);
       } catch (error) {
-        console.error("Error fetching search results:", error);
+        console.error("Error fetching initial movies: ", error);
         setLoading(false);
       }
     };
 
-    fetchSearchResults();
-  }, [query, selectedCategory, currentPage, isFirstLoad]);
-
-  const loadPages = () => {
-    if (!loading && hasMore) {
-      setCurrentPage((prevPage) => prevPage + 1);
+    if (query) {
+      loadInitialSearch();
+    } else {
+      setResults([]);
     }
+  }, [query, selectedCategory]);
+
+  const loadPages = async () => {
+    const nextPage = currentPage + 1;
+    await fetchSearchResults(nextPage);
+    setCurrentPage(nextPage);
   };
 
   return (
     <div className="min-h-screen">
       <NavBar />
       <div className="lg:px-12 lg:py-6 py-2 min-h-screen">
-        {/* Search Bar & Category */}
         <div className="flex flex-row gap-3 lg:gap-4 px-5">
           <label className="form-control mt-4 w-2/5 lg:w-1/4">
             <select
@@ -95,7 +88,6 @@ export function Search() {
                 setResults([]);
                 setCurrentPage(1);
                 setHasMore(true);
-                setIsFirstLoad(true); // Reset isFirstLoad saat kategori berubah
               }}
             >
               <option value={searchType.movie}>Movie</option>
@@ -105,24 +97,6 @@ export function Search() {
           </label>
 
           <div className="relative flex items-center flex-grow">
-            <div className="absolute inset-y-0 start-0 flex items-center mt-1 ps-4 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400 mt-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-              <span className="sr-only">Search icon</span>
-            </div>
             <input
               type="text"
               id="search-navbar"
@@ -181,7 +155,7 @@ export function Search() {
           </p>
         )}
 
-        {hasMore && (
+        {query !== "" && hasMore && (
           <div className="flex justify-center mt-2 mb-6">
             <button
               onClick={loadPages}
